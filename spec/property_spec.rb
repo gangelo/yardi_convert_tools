@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe YardiConvertTools::Property do
   context '.create_property' do
     it 'should create the property'

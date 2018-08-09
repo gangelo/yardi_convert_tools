@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 module YardiConvertTools
+  # Helpers to handle a property.
   module Property
     def self.create_property(property_id)
       # TODO: Creates the files necessary to
