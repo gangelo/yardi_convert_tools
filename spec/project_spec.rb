@@ -20,7 +20,7 @@ RSpec.describe YardiConvertTools::Project, type: :aruba do
     project_root_dir = YardiConvertTools::Project.project_root_dir(jira_ticket)
     project_subdirs = Dir.glob(File.join(project_root_dir, '*'))
     FileUtils.rmdir(project_subdirs) unless project_subdirs.empty?
-    FileUtils.rmdir(project_root_dir)
+    FileUtils.rmdir(project_root_dir) if Dir.exist?(project_root_dir)
   end
 
   context '.create_project' do
