@@ -23,7 +23,7 @@ RSpec.describe YardiConvertTools::Project, type: :aruba do
   def remove_test_dirs
     project_root_dir = YardiConvertTools::Project.project_root_dir(jira_ticket)
     project_subdirs = Dir.glob(File.join(project_root_dir, '*'))
-    project_files = Dir.glob(File.join(project_root_dir, '**/*.{dry.txt,live.txt}'))
+    project_files = Dir.glob(File.join(project_root_dir, '**/*.{txt}'))
     FileUtils.rm(project_files) unless project_files.empty?
     FileUtils.rmdir(project_subdirs) unless project_subdirs.empty?
     FileUtils.rmdir(project_root_dir) if Dir.exist?(project_root_dir)
@@ -48,15 +48,21 @@ RSpec.describe YardiConvertTools::Project, type: :aruba do
       end
     end
 
-    context '#dry_dir' do
-      it 'should have the right dry run directory' do
-        expect(project.dry_dir).to eq(File.join('/tmp', "#{jira_ticket}/dry"))
+    context '#todo_dir' do
+      it 'should have a todo directory' do
+        expect(project.todo_dir).to eq(File.join('/tmp', "#{jira_ticket}/todo"))
       end
     end
 
-    context '#live_dir' do
-      it 'should have the right live run directory' do
-        expect(project.live_dir).to eq(File.join('/tmp', "#{jira_ticket}/live"))
+    context '#in_work_dir' do
+      it 'should have an in work directory' do
+        expect(project.in_work_dir).to eq(File.join('/tmp', "#{jira_ticket}/in-work"))
+      end
+    end
+
+    context '#completed_dir' do
+      it 'should have a completed directory' do
+        expect(project.completed_dir).to eq(File.join('/tmp', "#{jira_ticket}/completed"))
       end
     end
 
@@ -64,14 +70,14 @@ RSpec.describe YardiConvertTools::Project, type: :aruba do
       it 'should have the right dry run files' do
         (0..9).each do |index|
           file = project.property_files[:dry_files][index]
-          expect(file).to eq("/tmp/#{jira_ticket}/dry/#{index}.dry.txt")
+          expect(file).to eq("/tmp/#{jira_ticket}/todo/dry.#{index}.txt")
         end
       end
 
       it 'should have the right live run files' do
         (0..9).each do |index|
           file = project.property_files[:live_files][index]
-          expect(file).to eq("/tmp/#{jira_ticket}/live/#{index}.live.txt")
+          expect(file).to eq("/tmp/#{jira_ticket}/todo/live.#{index}.txt")
         end
       end
     end
@@ -82,12 +88,16 @@ RSpec.describe YardiConvertTools::Project, type: :aruba do
       expect(project.root_dir).to be_an_existing_path
     end
 
-    it 'should create the project dry subfolder' do
-      expect(project.dry_dir).to be_an_existing_path
+    it 'should create the project todo subfolder' do
+      expect(project.todo_dir).to be_an_existing_path
     end
 
-    it 'should create the project live subfolder' do
-      expect(project.live_dir).to be_an_existing_path
+    it 'should create the project in work subfolder' do
+      expect(project.in_work_dir).to be_an_existing_path
+    end
+
+    it 'should create the project completed subfolder' do
+      expect(project.completed_dir).to be_an_existing_path
     end
 
     it 'should create the dry project files' do
